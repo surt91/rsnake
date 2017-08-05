@@ -69,16 +69,35 @@ impl Game {
     pub fn key_press(&mut self, key: Key) {
         use piston::input::keyboard::Key::*;
 
-        let turn = match key {
-            Up | W => Some(Direction::N),
-            Down | S => Some(Direction::S),
-            Right | D => Some(Direction::E),
-            Left | A => Some(Direction::W),
-            _ => None
+        enum Command {
+            Turn(Direction),
+            ChangeSpeed(f64),
+            Help,
+            None
+        }
+
+        let cmd = match key {
+            Up | W => Command::Turn(Direction::N),
+            Down | S => Command::Turn(Direction::S),
+            Right | D => Command::Turn(Direction::E),
+            Left | A => Command::Turn(Direction::W),
+            E => Command::ChangeSpeed(0.8),
+            Q => Command::ChangeSpeed(1./0.8),
+            H => Command::Help,
+            _ => Command::None
         };
 
-        match turn {
-            Some(t) if !self.snake.reverse(t) => self.snake.turn(t),
+        match cmd {
+            Command::Turn(t) if !self.snake.reverse(t) => self.snake.turn(t),
+            Command::ChangeSpeed(f) => {
+                self.delay *= f;
+                self.time = self.round as f64 * self.delay;
+            },
+            Command::Help => {
+                println!("E: Speed up");
+                println!("Q: Slow down");
+                println!("WASD: Steer");
+            }
             _ => ()
         }
 
