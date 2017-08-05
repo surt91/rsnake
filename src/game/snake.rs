@@ -6,6 +6,7 @@ use super::map::Map;
 pub struct Snake {
     tail: VecDeque<Point>,
     direction: Direction,
+    last_direction: Direction,
     length: usize,
     size: (u32, u32),
 }
@@ -22,6 +23,7 @@ impl Snake {
         Snake {
             tail: init,
             direction: Direction::E,
+            last_direction: Direction::E,
             length,
             size,
         }
@@ -40,6 +42,8 @@ impl Snake {
             let to_free = self.tail.pop_back().unwrap();
             map.free(to_free);
         }
+
+        self.last_direction = self.direction;
     }
 
     pub fn peek(&mut self) -> Point {
@@ -73,7 +77,7 @@ impl Snake {
             Direction::W => Direction::E,
         };
 
-        self.direction == r
+        self.last_direction == r
     }
 
     pub fn feed(&mut self) {
