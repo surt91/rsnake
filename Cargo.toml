@@ -1,0 +1,12 @@
+[package]
+name = "rsnake"
+version = "0.1.0"
+authors = ["Hendrik Schawe <surt91@gmail.com>"]
+
+[dependencies]
+rand = "*"
+piston = "*"
+pistoncore-glutin_window = "*"
+pistoncore-sdl2_window = "*"
+piston2d-graphics = "*"
+piston2d-opengl_graphics = "*"
