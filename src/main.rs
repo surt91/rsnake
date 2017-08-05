@@ -14,10 +14,16 @@ use opengl_graphics::{ GlGraphics, OpenGL };
 use piston::event_loop::{ Events, EventSettings, EventLoop };
 use piston::input::{Button, GenericEvent, Input, RenderEvent};
 use piston::input::keyboard::Key;
-use rand::{thread_rng, Rng};
+
+
+mod game;
+use game::Game;
+use game::renderable::Renderable;
+
 
 const SIZE: (u32, u32) = (20, 20);
 const SCALE: u32 = 20;
+
 
 fn main() {
     let mut window: Window = WindowSettings::new("RSnake", [SIZE.0 * SCALE, SIZE.1 * SCALE])
@@ -27,22 +33,25 @@ fn main() {
 
     let mut gfx = GlGraphics::new(OpenGL::V3_2);
 
-    // let mut game = Game::new();
+    let mut game = Game::new();
 
-    let mut events = Events::new(EventSettings::new().lazy(true));
+    let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
         match e {
             Input::Render(args) => {
-                let t = Context::new_viewport(args.viewport()).transform;
-                // game.render(t, &mut gfx);
+                gfx.draw(args.viewport(), |c, gfx| {
+                    game.render(c.transform, gfx, SCALE);
+                    game.dirty = false;
+                });
             }
 
             Input::Press(Button::Keyboard(key)) => {
-                // game.key_press(key);
+                game.key_press(key);
+                println!("pressed {:?}", key);
             }
 
             Input::Update(args) => {
-                // game.update(args.dt);
+                game.update(args.dt);
             }
 
             _ => {}
