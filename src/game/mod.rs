@@ -18,6 +18,7 @@ pub struct Game {
     time: f64,
     round: u64,
     pub dirty: bool,
+    pub score: i64,
 }
 
 impl Game {
@@ -25,6 +26,7 @@ impl Game {
         let snake = Snake::new();
         let mut map = Map::new(size, &snake);
         map.generate_food();
+
         Game {
             snake,
             map,
@@ -32,6 +34,7 @@ impl Game {
             time: 0.,
             round: 0,
             dirty: true,
+            score: 0,
         }
     }
 
@@ -60,6 +63,7 @@ impl Game {
                 self.snake.feed();
                 self.map.consumed_food();
                 self.snake.step(&mut self.map);
+                self.score += 1;
             }
             State::Empty => self.snake.step(&mut self.map),
         }

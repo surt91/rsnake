@@ -10,8 +10,10 @@ use sdl2_window::Sdl2Window as Window;
 use piston::window::WindowSettings;
 
 use graphics::*;
-use opengl_graphics::{ GlGraphics, OpenGL };
-use piston::event_loop::{ Events, EventSettings, EventLoop };
+use opengl_graphics::{GlGraphics, OpenGL, glyph_cache, TextureSettings, Filter};
+use opengl_graphics::glyph_cache::GlyphCache;
+use graphics::character::CharacterCache;
+use piston::event_loop::{Events, EventSettings, EventLoop};
 use piston::input::{Button, GenericEvent, Input, RenderEvent};
 use piston::input::keyboard::Key;
 
@@ -35,12 +37,16 @@ fn main() {
 
     let mut game = Game::new(SIZE);
 
+    let texture_settings = TextureSettings::new().filter(Filter::Nearest);
+    let mut glyphs = GlyphCache::new("assets/FiraSans-Regular.ttf", texture_settings)
+                                .expect("Could not load font");
+
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
         match e {
             Input::Render(args) => {
                 gfx.draw(args.viewport(), |c, gfx| {
-                    game.render(c.transform, gfx, SCALE);
+                    game.render(c, gfx, SIZE, SCALE, &mut glyphs);
                     game.dirty = false;
                 });
             }
