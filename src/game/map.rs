@@ -12,12 +12,9 @@ pub struct Map {
 }
 
 impl Map {
-    pub fn new(size: (u32, u32), s: &Snake) -> Map {
+    pub fn new(size: (u32, u32)) -> Map {
         let mut map = HashMap::new();
-        for p in s.get_tail() {
-            map.insert(*p, State::Snake);
-        }
-
+        
         let mut m = Map {
             size,
             map,
@@ -62,7 +59,7 @@ impl Map {
     pub fn free(&mut self, p: Point) {
         self.map.remove(&p);
     }
-    
+
     pub fn occupy(&mut self, p: Point) {
         self.map.insert(p, State::Snake);
     }
