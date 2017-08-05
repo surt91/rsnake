@@ -30,10 +30,9 @@ impl Snake {
     }
 
     pub fn step(&mut self, map: &mut Map) {
-        println!("{:?}", self.direction);
         let new_head = self.peek();
-        println!("{:?}", new_head);
         self.tail.push_front(new_head);
+        map.occupy(new_head);
 
         while self.tail.len() > self.length {
             let to_free = self.tail.pop_back().unwrap();

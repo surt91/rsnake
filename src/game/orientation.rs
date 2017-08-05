@@ -33,7 +33,7 @@ pub enum Direction {
     E,
 }
 
-#[derive(Hash, Debug, Clone, Copy)]
+#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum State {
     Empty,
     Wall,

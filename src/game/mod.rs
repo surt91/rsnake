@@ -21,9 +21,10 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new() -> Game {
+    pub fn new(size: (u32, u32)) -> Game {
         let snake = Snake::new();
-        let map = Map::new(&snake);
+        let mut map = Map::new(size, &snake);
+        map.generate_food();
         Game {
             snake,
             map,

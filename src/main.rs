@@ -33,7 +33,7 @@ fn main() {
 
     let mut gfx = GlGraphics::new(OpenGL::V3_2);
 
-    let mut game = Game::new();
+    let mut game = Game::new(SIZE);
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
