@@ -24,7 +24,7 @@ fn render_score<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32), sca
 {
     let offset = 20;
     let font_size = 3 * scale as i32;
-    let dx = (size.0 * scale) as i32 - offset - max(1, (score as f64 + 0.9).log10().ceil() as i32) * (0.4 * font_size as f64) as i32;
+    let dx = (size.0 * scale) as i32 - offset - max(1, (score as f64 + 0.9).log10().ceil() as i32) * (0.45 * font_size as f64) as i32;
     let dy = (size.1 * scale) as i32 - offset;
 
     render_text(&format!("{}", score), font_size as u32, (dx, dy), "666666", c, gfx, glyphs)
@@ -37,7 +37,7 @@ fn render_game_over<C, G>(text: &str, score: i64, c: Context, gfx: &mut G, size:
     let font_size = 3 * scale as i32;
 
     // FIXME: dx needs to be adjusted properly
-    let dx = offset + ((size.0 * scale) as f64 / 2.) as i32 - 3 * font_size;
+    let dx = offset + ((size.0 * scale) as f64 / 2.) as i32 - (0.45 * text.len() as f64 / 2.  * font_size as f64) as i32;
     let dy = offset + 3 * font_size;
 
     render_text(text, font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
