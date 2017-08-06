@@ -7,7 +7,7 @@ pub struct Snake {
     tail: VecDeque<Point>,
     pub direction: Direction,
     pub last_direction: Direction,
-    length: usize,
+    pub length: usize,
     size: (u32, u32),
 }
 
