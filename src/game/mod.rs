@@ -22,6 +22,7 @@ pub struct Game {
     pub dirty: bool,
     pub score: i64,
     autopilot: Autopilot,
+    game_over: bool,
 }
 
 impl Game {
@@ -41,6 +42,7 @@ impl Game {
             dirty: true,
             score: 0,
             autopilot: Autopilot::None,
+            game_over: false,
         }
     }
 
@@ -131,5 +133,6 @@ impl Game {
 
         println!("Game Over!");
         self.delay = f64::INFINITY;
+        self.game_over = true;
     }
 }

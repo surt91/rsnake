@@ -7,6 +7,46 @@ use super::Game;
 use super::snake::Snake;
 use super::map::Map;
 
+fn render_text<C, G>(text: &str, font_size: u32, pos: (i32, i32), color: &str, c: Context, gfx: &mut G, glyphs: &mut C)
+    where C: CharacterCache, G: Graphics<Texture=C::Texture>
+{
+    let t = text::Text::new_color(color::hex(color), font_size);
+
+    t.draw(
+            text,
+            glyphs, &c.draw_state,
+            c.transform.trans(pos.0 as f64, pos.1 as f64), gfx
+    );
+}
+
+fn render_score<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+    where C: CharacterCache, G: Graphics<Texture=C::Texture>
+{
+    let offset = 20;
+    let font_size = 3 * scale as i32;
+    let dx = (size.0 * scale) as i32 - font_size - offset - (score as f64 + 0.9).log10().ceil() as i32 * font_size;
+    let dy = (size.1 * scale) as i32 - offset;
+
+    render_text(&format!("{}", score), font_size as u32, (dx, dy), "666666", c, gfx, glyphs)
+}
+
+fn render_game_over<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+    where C: CharacterCache, G: Graphics<Texture=C::Texture>
+{
+    let offset = 20;
+    let font_size = 3 * scale as i32;
+
+    // FIXME: dx needs to be adjusted properly
+    let dx = offset + ((size.0 * scale) as f64 / 2.) as i32 - 3 * font_size;
+    let dy = offset + 3 * font_size;
+
+    render_text("Game Over!", font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
+
+    let dx = dx + (5.8*font_size as f64) as i32 - font_size - offset - (score as f64 + 0.9).log10().ceil() as i32 * font_size;
+    let dy = dy + font_size;
+    render_text(&format!("{}", score), font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
+}
+
 pub trait Renderable {
     fn render<C, G>(&self, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
         where C: CharacterCache, G: Graphics<Texture=C::Texture>;
@@ -18,19 +58,19 @@ impl Renderable for Game {
     {
         clear(color::hex("000000"), gfx);
 
-        let offset = 20;
-        let font_size = 3 * scale;
-        let t = text::Text::new_color(color::hex("666666"), font_size);
-        let dx = size.0 * scale - font_size - offset - (self.score as f64).log10().ceil() as u32;
-        let dy = size.1 * scale - offset;
-        t.draw(
-                &format!("{}", self.score),
-                glyphs, &c.draw_state,
-                c.transform.trans(dx as f64, dy as f64), gfx
-        );
+        // render score
+        if !self.game_over {
+            render_score(self.score, c, gfx, size, scale, glyphs);
+        }
 
+        // render content
         self.snake.render(c, gfx, size, scale, glyphs);
         self.map.render(c, gfx, size, scale, glyphs);
+
+        // render Game Over
+        if self.game_over {
+            render_game_over(self.score, c, gfx, size, scale, glyphs);
+        }
     }
 }
 
