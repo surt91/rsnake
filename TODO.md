@@ -1,11 +1,7 @@
 # Todo
 
-* boring autopilot
 * visualization indicating the way
 * snake that can traverse diagonally
+* best first search to food
 
 * fix linter warnings
-
-* travis-ci
-* readme
-* license
