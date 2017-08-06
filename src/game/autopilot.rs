@@ -57,20 +57,26 @@ impl Game {
         }
     }
 
-    fn avoid_hazard(&mut self) {
-        // decide to not collide in the next step
-        let mut rng = thread_rng();
-        let left = rng.gen::<f64>() > 0.5;
-        if left {
-            self.snake.turn_left();
-        } else {
-            self.snake.turn_right();
+    fn avoid_hazard(&mut self) -> bool {
+        let mut decision = false;
+        if self.detect_hazard() {
+            decision = true;
+            // decide to not collide in the next step
+            let mut rng = thread_rng();
+            let left = rng.gen::<f64>() > 0.5;
+            if left {
+                self.snake.turn_left();
+            } else {
+                self.snake.turn_right();
+            }
+
+            if self.detect_hazard() {
+                self.snake.turn_right();
+                self.snake.turn_right();
+            }
         }
 
-        if self.detect_hazard() {
-            self.snake.turn_right();
-            self.snake.turn_right();
-        }
+        decision
     }
 
     fn occupied_neighbors(&self) -> usize {
@@ -108,9 +114,7 @@ impl Game {
         if self.detect_hazard() {
             self.snake.turn(original);
 
-            if self.detect_hazard() {
-                self.avoid_hazard();
-            }
+            self.avoid_hazard();
             decision = true;
         }
 
@@ -118,9 +122,7 @@ impl Game {
     }
 
     pub fn stupid_autopilot(&mut self) {
-        if self.detect_hazard() {
-            self.avoid_hazard()
-        } else {
+        if !self.avoid_hazard() {
             self.find_food()
         }
     }
