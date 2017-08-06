@@ -1,5 +1,5 @@
 use super::Game;
-use super::orientation::{Point, State, Direction, Reachable, best_first_search};
+use super::orientation::{State, Direction, Reachable, best_first_search};
 use rand::{thread_rng, Rng};
 
 pub enum Autopilot {
@@ -58,19 +58,15 @@ impl Game {
 
     fn avoid_hazard(&mut self) {
         // decide to not collide in the next step
-        // println!("detected hazard!");
         let mut rng = thread_rng();
         let left = rng.gen::<f64>() > 0.5;
         if left {
             self.snake.turn_left();
-            // println!("turn left!");
         } else {
             self.snake.turn_right();
-            // println!("turn right!");
         }
 
         if self.detect_hazard() {
-            // println!("also hazard, turn the other way!");
             self.snake.turn_right();
             self.snake.turn_right();
         }
@@ -97,12 +93,10 @@ impl Game {
         if self.detect_hazard()
             || best_first_search(&self.snake.peek(), self.snake.end(), &self.map) == Reachable::No
         {
-            // println!("I will be trapped!");
             self.snake.turn_left();
             if self.detect_hazard()
                 || best_first_search(&self.snake.peek(), self.snake.end(), &self.map) == Reachable::No
             {
-                // println!("I will still be trapped!");
                 self.snake.turn_left();
                 self.snake.turn_left();
             }
@@ -111,7 +105,6 @@ impl Game {
 
         // maybe we are trapped, the at least do not die immediately
         if self.detect_hazard() {
-            println!("Just survive!", );
             self.snake.turn(original);
 
             if self.detect_hazard() {

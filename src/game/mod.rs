@@ -1,7 +1,6 @@
 mod orientation;
 mod map;
 mod snake;
-mod food;
 mod autopilot;
 
 pub mod renderable;
@@ -10,7 +9,7 @@ use piston::input::keyboard::Key;
 
 use self::snake::Snake;
 use self::map::Map;
-use self::orientation::{Point, Direction, State};
+use self::orientation::{Direction, State};
 use self::autopilot::Autopilot;
 
 pub struct Game {
@@ -62,10 +61,6 @@ impl Game {
     fn peek(&mut self) -> State {
         let p = self.snake.peek();
         self.map.at(&p)
-    }
-
-    fn turn(&mut self, dir: Direction) {
-        self.snake.turn(dir)
     }
 
     pub fn pause(&mut self) {
@@ -145,9 +140,6 @@ impl Game {
                     self.resume()
                 } else {
                     self.pause();
-                }
-                for i in &self.help_texts {
-                    println!("{}", i);
                 }
             }
             _ => self.resume(),

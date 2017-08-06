@@ -161,8 +161,6 @@ pub fn best_first_search(start: &Point, target: &Point, map: &Map) -> Reachable 
     loop {
         let nearest = match q.pop() {
             None => {
-                println!("trapped, space: {}", visited.len());
-                map.print();
                 return Reachable::No
             }
             Some(x) => x,
@@ -170,16 +168,12 @@ pub fn best_first_search(start: &Point, target: &Point, map: &Map) -> Reachable 
 
         if nearest.distance == -1 {
             // distance is 1 -> found
-            // println!("reachable");
             return Reachable::Yes
         } else if nearest.distance.abs() as u32 > map.size.0 + map.size.1 {
             // distance larger than the board -> something is wrong!
             println!("too long");
             panic!();
-            return Reachable::No
         }
-
-        // print!("{:?}: ", nearest);
 
         for n in nearest.pos
                         .neighbors()
@@ -191,11 +185,9 @@ pub fn best_first_search(start: &Point, target: &Point, map: &Map) -> Reachable 
                                )
         {
             let n = map.normalize(&n);
-            // print!(" {:?}", n);
             tmp_visited.push(n);
             q.push(Thingy::new(&n, target, map))
         }
-        // print!("\n");
 
         for i in &tmp_visited {
             visited.insert(*i);

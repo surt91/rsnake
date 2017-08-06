@@ -47,7 +47,7 @@ fn render_game_over<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32),
     render_text(&format!("{}", score), font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
 }
 
-fn render_help<C, G>(texts: &Vec<&str>, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+fn render_help<C, G>(texts: &[&str], c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
     where C: CharacterCache, G: Graphics<Texture=C::Texture>
 {
     rectangle(color::hex("cccccc"),
@@ -109,7 +109,7 @@ impl Renderable for Game {
 }
 
 impl Renderable for Snake {
-    fn render<C, G>(&self, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+    fn render<C, G>(&self, c: Context, gfx: &mut G, _: (u32, u32), scale: u32, _: &mut C)
         where C: CharacterCache, G: Graphics<Texture=C::Texture>
     {
         let tip = max(1, self.length as i32 - 5) as usize;
@@ -151,7 +151,7 @@ impl Renderable for Snake {
 }
 
 impl Renderable for Map {
-    fn render<C, G>(&self, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+    fn render<C, G>(&self, c: Context, gfx: &mut G, _: (u32, u32), scale: u32, _: &mut C)
         where C: CharacterCache, G: Graphics<Texture=C::Texture>
     {
         for p in self.get_walls().iter() {

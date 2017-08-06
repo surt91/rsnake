@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 use rand::{thread_rng, Rng};
 
-use super::orientation::{ Point, Direction, State };
-use super::snake::Snake;
+use super::orientation::{Point, State};
 
 pub struct Map {
     pub size: (u32, u32),

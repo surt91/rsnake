@@ -9,19 +9,14 @@ use sdl2_window::Sdl2Window as Window;
 // use glutin_window::GlutinWindow as Window;
 use piston::window::WindowSettings;
 
-use graphics::*;
-use opengl_graphics::{GlGraphics, OpenGL, glyph_cache, TextureSettings, Filter};
+use opengl_graphics::{GlGraphics, OpenGL, TextureSettings, Filter};
 use opengl_graphics::glyph_cache::GlyphCache;
-use graphics::character::CharacterCache;
-use piston::event_loop::{Events, EventSettings, EventLoop};
-use piston::input::{Button, GenericEvent, Input, RenderEvent};
-use piston::input::keyboard::Key;
-
+use piston::event_loop::{Events, EventSettings};
+use piston::input::{Button, Input};
 
 mod game;
 use game::Game;
 use game::renderable::Renderable;
-
 
 const SIZE: (u32, u32) = (20, 20);
 const SCALE: u32 = 20;
@@ -53,7 +48,6 @@ fn main() {
 
             Input::Press(Button::Keyboard(key)) => {
                 game.key_press(key);
-                println!("pressed {:?}", key);
             }
 
             Input::Update(args) => {

@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use super::orientation::{Point, Direction, State};
+use super::orientation::{Point, Direction};
 use super::map::Map;
 
 pub struct Snake {
