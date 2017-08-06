@@ -1,3 +1,8 @@
+addons:
+  apt:
+    packages:
+      - libsdl2-dev
+
 language: rust
 rust:
   - stable
