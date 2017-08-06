@@ -9,7 +9,7 @@ use piston::input::keyboard::Key;
 
 use self::snake::Snake;
 use self::map::Map;
-use self::orientation::{Direction, State};
+use self::orientation::{Direction, State, Point};
 use self::autopilot::Autopilot;
 
 pub struct Game {
@@ -110,6 +110,8 @@ impl Game {
                 // test if we filled the whole map
                 if self.snake.length as u32 >= self.map.size.1 * self.map.size.0 - 1 {
                     self.game_won();
+                    // remove food from sight
+                    self.map.food = Point::new(-1, -1);
                 } else {
                     self.map.consumed_food();
                 }
@@ -178,7 +180,6 @@ impl Game {
     fn game_won(&mut self) {
         println!("Game Won!");
         self.game_won = true;
-        self.time = 0.;
     }
 
     fn restart(&mut self) {
