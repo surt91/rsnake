@@ -23,6 +23,8 @@ pub struct Game {
     pub score: i64,
     autopilot: Autopilot,
     game_over: bool,
+    paused: bool,
+    help_texts: Vec<&'static str>,
 }
 
 impl Game {
@@ -43,6 +45,17 @@ impl Game {
             score: 0,
             autopilot: Autopilot::None,
             game_over: false,
+            paused: false,
+            help_texts: vec![
+                "E: Speed up",
+                "Q: Slow down",
+                "WASD: Steer",
+                "F: Stupid Autopilot",
+                "T: Smart Autopilot",
+                "M: Manual Control",
+                "P: Pause and Help",
+                "Esc: Exit"
+            ],
         }
     }
 
@@ -55,9 +68,21 @@ impl Game {
         self.snake.turn(dir)
     }
 
+    pub fn pause(&mut self) {
+        self.paused = true;
+    }
+
+    pub fn resume(&mut self) {
+        self.paused = false;
+    }
+
     pub fn update(&mut self, dt: f64) {
+        if self.paused {
+            return
+        }
+
         self.time += dt;
-        // println!("{:?}", self.time);
+
         if self.round as f64 * self.delay > self.time {
             return
         }
@@ -102,9 +127,9 @@ impl Game {
             E => Command::ChangeSpeed(0.8),
             Q => Command::ChangeSpeed(1./0.8),
             F => Command::Autopilot(Autopilot::Stupid),
-            R => Command::Autopilot(Autopilot::Smart),
+            T => Command::Autopilot(Autopilot::Smart),
             M => Command::Autopilot(Autopilot::None),
-            H => Command::Help,
+            H | P => Command::Help,
             _ => Command::None
         };
 
@@ -116,14 +141,16 @@ impl Game {
             },
             Command::Autopilot(a) => self.autopilot = a,
             Command::Help => {
-                println!("E: Speed up");
-                println!("Q: Slow down");
-                println!("WASD: Steer");
-                println!("F: Stupid Autopilot");
-                println!("R: Smart Autopilot");
-                println!("M: Manual Control");
+                if self.paused {
+                    self.resume()
+                } else {
+                    self.pause();
+                }
+                for i in &self.help_texts {
+                    println!("{}", i);
+                }
             }
-            _ => ()
+            _ => self.resume(),
         }
 
     }

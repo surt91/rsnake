@@ -47,6 +47,36 @@ fn render_game_over<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32),
     render_text(&format!("{}", score), font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
 }
 
+fn render_help<C, G>(texts: &Vec<&str>, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+    where C: CharacterCache, G: Graphics<Texture=C::Texture>
+{
+    rectangle(color::hex("cccccc"),
+              [
+                1. * scale as f64,
+                1. * scale as f64,
+                ((size.0 - 2) * scale) as f64,
+                ((size.1 - 2) * scale) as f64,
+              ],
+              c.transform, gfx
+    );
+
+    let offset = 20 + scale as i32;
+    let font_size = 2 * scale as i32;
+
+    // FIXME: dx needs to be adjusted properly
+    let dx = offset;
+    let mut dy = offset + font_size;
+
+    render_text("rsnake", font_size as u32, (dx, dy), "688f4e", c, gfx, glyphs);
+
+    let font_size = scale as i32;
+    dy += offset;
+    for i in texts {
+        dy += (1.1 * font_size as f64) as i32;
+        render_text(i, font_size as u32, (dx, dy), "333333", c, gfx, glyphs);
+    }
+}
+
 pub trait Renderable {
     fn render<C, G>(&self, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
         where C: CharacterCache, G: Graphics<Texture=C::Texture>;
@@ -63,13 +93,17 @@ impl Renderable for Game {
             render_score(self.score, c, gfx, size, scale, glyphs);
         }
 
-        // render content
-        self.snake.render(c, gfx, size, scale, glyphs);
-        self.map.render(c, gfx, size, scale, glyphs);
+        if self.paused {
+            render_help(&self.help_texts, c, gfx, size, scale, glyphs);
+        } else {
+            // render content
+            self.snake.render(c, gfx, size, scale, glyphs);
+            self.map.render(c, gfx, size, scale, glyphs);
 
-        // render Game Over
-        if self.game_over {
-            render_game_over(self.score, c, gfx, size, scale, glyphs);
+            // render Game Over
+            if self.game_over {
+                render_game_over(self.score, c, gfx, size, scale, glyphs);
+            }
         }
     }
 }
