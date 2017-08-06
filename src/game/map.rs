@@ -90,6 +90,19 @@ impl Map {
         self.map.remove(&p);
     }
 
+    pub fn init_snake<'a, I: Iterator<Item=&'a Point>>(&mut self, s: I) {
+        for p in s {
+            let p = self.normalize(p);
+
+            // overwrite confliucting food and regenerate it
+            if self.at(&p) == State::Food {
+                self.generate_food();
+            }
+
+            self.map.insert(p, State::Snake);
+        }
+    }
+
     pub fn occupy(&mut self, p: Point) {
         let p = self.normalize(&p);
         self.map.insert(p, State::Snake);

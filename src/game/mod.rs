@@ -30,9 +30,7 @@ impl Game {
     pub fn new(size: (u32, u32)) -> Game {
         let mut map = Map::new(size);
         let snake = Snake::new(size);
-        for p in snake.get_tail().iter() {
-            map.occupy(*p);
-        }
+        map.init_snake(snake.get_tail().iter());
 
         Game {
             snake,
@@ -171,9 +169,7 @@ impl Game {
     fn restart(&mut self) {
         self.map = Map::new(self.map.size);
         self.snake = Snake::new(self.map.size);
-        for p in self.snake.get_tail().iter() {
-            self.map.occupy(*p);
-        }
+        self.map.init_snake(self.snake.get_tail().iter());
 
         self.time = 0.;
         self.round = 0;
