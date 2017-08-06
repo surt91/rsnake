@@ -5,7 +5,7 @@ use super::map::Map;
 
 pub struct Snake {
     tail: VecDeque<Point>,
-    direction: Direction,
+    pub direction: Direction,
     last_direction: Direction,
     length: usize,
     size: (u32, u32),
@@ -29,7 +29,7 @@ impl Snake {
         }
     }
 
-    fn head(&self) -> &Point {
+    pub fn head(&self) -> &Point {
         self.tail.front().expect("Zero Length Snake! Panic!")
     }
 
@@ -78,6 +78,34 @@ impl Snake {
         };
 
         self.last_direction == r
+    }
+
+    pub fn left(&self) -> Direction {
+        match self.direction {
+            Direction::N => Direction::W,
+            Direction::S => Direction::E,
+            Direction::E => Direction::N,
+            Direction::W => Direction::S,
+        }
+    }
+
+    pub fn right(&self) -> Direction {
+        match self.direction {
+            Direction::N => Direction::E,
+            Direction::S => Direction::W,
+            Direction::E => Direction::S,
+            Direction::W => Direction::N,
+        }
+    }
+
+    pub fn turn_left(&mut self) {
+        let d = self.left();
+        self.turn(d);
+    }
+
+    pub fn turn_right(&mut self) {
+        let d = self.right();
+        self.turn(d);
     }
 
     pub fn feed(&mut self) {

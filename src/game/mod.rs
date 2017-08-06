@@ -2,6 +2,7 @@ mod orientation;
 mod map;
 mod snake;
 mod food;
+mod autopilot;
 
 pub mod renderable;
 
@@ -10,6 +11,7 @@ use piston::input::keyboard::Key;
 use self::snake::Snake;
 use self::map::Map;
 use self::orientation::{Point, Direction, State};
+use self::autopilot::Autopilot;
 
 pub struct Game {
     snake: Snake,
@@ -19,6 +21,7 @@ pub struct Game {
     round: u64,
     pub dirty: bool,
     pub score: i64,
+    autopilot: Autopilot,
 }
 
 impl Game {
@@ -38,6 +41,7 @@ impl Game {
             round: 0,
             dirty: true,
             score: 0,
+            autopilot: Autopilot::None,
         }
     }
 
@@ -57,7 +61,11 @@ impl Game {
             return
         }
         self.dirty = true;
-        println!("{:?}", self.round);
+
+        match self.autopilot {
+            Autopilot::Stupid => self.stupid_autopilot(),
+            _ => (),
+        }
 
         self.round += 1;
         match self.peek() {
@@ -79,6 +87,7 @@ impl Game {
         enum Command {
             Turn(Direction),
             ChangeSpeed(f64),
+            Autopilot(Autopilot),
             Help,
             None
         }
@@ -90,6 +99,8 @@ impl Game {
             Left | A => Command::Turn(Direction::W),
             E => Command::ChangeSpeed(0.8),
             Q => Command::ChangeSpeed(1./0.8),
+            F => Command::Autopilot(Autopilot::Stupid),
+            M => Command::Autopilot(Autopilot::None),
             H => Command::Help,
             _ => Command::None
         };
@@ -100,10 +111,13 @@ impl Game {
                 self.delay *= f;
                 self.time = self.round as f64 * self.delay;
             },
+            Command::Autopilot(a) => self.autopilot = a,
             Command::Help => {
                 println!("E: Speed up");
                 println!("Q: Slow down");
                 println!("WASD: Steer");
+                println!("F: Stupid Autopilot");
+                println!("M: Manual Control");
             }
             _ => ()
         }
