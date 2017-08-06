@@ -18,19 +18,19 @@ mod game;
 use game::Game;
 use game::renderable::Renderable;
 
-const SIZE: (u32, u32) = (20, 20);
-const SCALE: u32 = 20;
-
+mod parse_cl;
 
 fn main() {
-    let mut window: Window = WindowSettings::new("RSnake", [SIZE.0 * SCALE, SIZE.1 * SCALE])
+    let o = parse_cl::parse_cl();
+
+    let mut window: Window = WindowSettings::new("RSnake", [o.size.0 * o.scale, o.size.1 * o.scale])
                                             .exit_on_esc(true)
                                             .build()
                                             .unwrap();
 
     let mut gfx = GlGraphics::new(OpenGL::V3_2);
 
-    let mut game = Game::new(SIZE);
+    let mut game = Game::new(o.size);
 
     game.print_help();
 
@@ -43,7 +43,7 @@ fn main() {
         match e {
             Input::Render(args) => {
                 gfx.draw(args.viewport(), |c, gfx| {
-                    game.render(c, gfx, SIZE, SCALE, &mut glyphs);
+                    game.render(c, gfx, o.size, o.scale, &mut glyphs);
                     game.dirty = false;
                 });
             }

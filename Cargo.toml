@@ -5,6 +5,7 @@ authors = ["Hendrik Schawe <surt91@gmail.com>"]
 
 [dependencies]
 rand = "*"
+clap = "*"
 piston = "*"
 pistoncore-glutin_window = "*"
 pistoncore-sdl2_window = "*"
