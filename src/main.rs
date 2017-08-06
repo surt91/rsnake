@@ -32,6 +32,8 @@ fn main() {
 
     let mut game = Game::new(SIZE);
 
+    game.print_help();
+
     let texture_settings = TextureSettings::new().filter(Filter::Nearest);
     let mut glyphs = GlyphCache::new("assets/FiraSans-Regular.ttf", texture_settings)
                                 .expect("Could not load font");

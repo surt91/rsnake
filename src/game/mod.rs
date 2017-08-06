@@ -154,4 +154,10 @@ impl Game {
         self.delay = f64::INFINITY;
         self.game_over = true;
     }
+
+    pub fn print_help(&self) {
+        for i in &self.help_texts {
+            println!("{}", i);
+        }
+    }
 }
