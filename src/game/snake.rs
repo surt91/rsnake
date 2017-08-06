@@ -6,7 +6,7 @@ use super::map::Map;
 pub struct Snake {
     tail: VecDeque<Point>,
     pub direction: Direction,
-    last_direction: Direction,
+    pub last_direction: Direction,
     length: usize,
     size: (u32, u32),
 }
@@ -33,6 +33,10 @@ impl Snake {
         self.tail.front().expect("Zero Length Snake! Panic!")
     }
 
+    pub fn end(&self) -> &Point {
+        self.tail.back().expect("Zero Length Snake! Panic!")
+    }
+
     pub fn step(&mut self, map: &mut Map) {
         let new_head = self.peek();
         self.tail.push_front(new_head);
@@ -46,7 +50,7 @@ impl Snake {
         self.last_direction = self.direction;
     }
 
-    pub fn peek(&mut self) -> Point {
+    pub fn peek(&self) -> Point {
         let mut p = *self.head() + self.direction;
 
         // periodic boundaries

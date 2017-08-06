@@ -63,6 +63,7 @@ impl Game {
 
         match self.autopilot {
             Autopilot::Stupid => self.stupid_autopilot(),
+            Autopilot::Smart => self.smart_autopilot(),
             _ => (),
         }
 
@@ -99,6 +100,7 @@ impl Game {
             E => Command::ChangeSpeed(0.8),
             Q => Command::ChangeSpeed(1./0.8),
             F => Command::Autopilot(Autopilot::Stupid),
+            R => Command::Autopilot(Autopilot::Smart),
             M => Command::Autopilot(Autopilot::None),
             H => Command::Help,
             _ => Command::None
@@ -116,6 +118,7 @@ impl Game {
                 println!("Q: Slow down");
                 println!("WASD: Steer");
                 println!("F: Stupid Autopilot");
+                println!("R: Smart Autopilot");
                 println!("M: Manual Control");
             }
             _ => ()
