@@ -2,6 +2,7 @@ use super::Game;
 use super::orientation::{State, Direction, Reachable, best_first_search};
 use rand::{thread_rng, Rng};
 
+#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Autopilot {
     Stupid,
     Smart,

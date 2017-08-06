@@ -46,6 +46,7 @@ impl Game {
             game_over: false,
             paused: false,
             help_texts: vec![
+                "R: Restart",
                 "E: Speed up",
                 "Q: Slow down",
                 "WASD: Steer",
@@ -73,6 +74,17 @@ impl Game {
 
     pub fn update(&mut self, dt: f64) {
         if self.paused {
+            return
+        }
+
+        if self.game_over {
+            // if the autopilot is activated, start again after 2 seconds
+            if self.autopilot != Autopilot::None {
+                self.time += dt;
+                if self.time > 2. {
+                    self.restart();
+                }
+            }
             return
         }
 
@@ -111,6 +123,7 @@ impl Game {
             ChangeSpeed(f64),
             Autopilot(Autopilot),
             Help,
+            Restart,
             None
         }
 
@@ -125,6 +138,7 @@ impl Game {
             T => Command::Autopilot(Autopilot::Smart),
             M => Command::Autopilot(Autopilot::None),
             H | P => Command::Help,
+            R => Command::Restart,
             _ => Command::None
         };
 
@@ -142,17 +156,31 @@ impl Game {
                     self.pause();
                 }
             }
+            Command::Restart => self.restart(),
             _ => self.resume(),
         }
 
     }
 
     fn game_over(&mut self) {
-        use std::f64;
-
         println!("Game Over!");
-        self.delay = f64::INFINITY;
         self.game_over = true;
+        self.time = 0.;
+    }
+
+    fn restart(&mut self) {
+        self.map = Map::new(self.map.size);
+        self.snake = Snake::new(self.map.size);
+        for p in self.snake.get_tail().iter() {
+            self.map.occupy(*p);
+        }
+
+        self.time = 0.;
+        self.round = 0;
+        self.dirty = true;
+        self.score = 0;
+        self.game_over = false;
+        self.paused = false;
     }
 
     pub fn print_help(&self) {
