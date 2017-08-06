@@ -22,6 +22,7 @@ pub struct Game {
     pub score: i64,
     autopilot: Autopilot,
     game_over: bool,
+    game_won: bool,
     paused: bool,
     help_texts: Vec<&'static str>,
 }
@@ -42,6 +43,7 @@ impl Game {
             score: 0,
             autopilot: Autopilot::None,
             game_over: false,
+            game_won: false,
             paused: false,
             help_texts: vec![
                 "R: Restart",
@@ -105,7 +107,12 @@ impl Game {
             State::Snake | State::Wall => self.game_over(),
             State::Food => {
                 self.snake.feed();
-                self.map.consumed_food();
+                // test if we filled the whole map
+                if self.snake.length as u32 >= self.map.size.1 * self.map.size.0 - 1 {
+                    self.game_won();
+                } else {
+                    self.map.consumed_food();
+                }
                 self.snake.step(&mut self.map);
                 self.score += 1;
             }
@@ -168,6 +175,12 @@ impl Game {
         self.time = 0.;
     }
 
+    fn game_won(&mut self) {
+        println!("Game Won!");
+        self.game_won = true;
+        self.time = 0.;
+    }
+
     fn restart(&mut self) {
         self.map = Map::new(self.map.size);
         self.snake = Snake::new(self.map.size);
@@ -178,6 +191,7 @@ impl Game {
         self.dirty = true;
         self.score = 0;
         self.game_over = false;
+        self.game_won = false;
         self.paused = false;
     }
 

@@ -63,8 +63,8 @@ impl Map {
         let mut rng = thread_rng();
         let mut p;
         while {
-            let x = rng.gen_range::<i32>(0, self.size.0 as i32 - 1);
-            let y = rng.gen_range::<i32>(0, self.size.1 as i32 - 1);
+            let x = rng.gen_range::<i32>(0, self.size.0 as i32);
+            let y = rng.gen_range::<i32>(0, self.size.1 as i32);
             p = Point::new(x, y);
             self.at(&p) != State::Empty
         } {}

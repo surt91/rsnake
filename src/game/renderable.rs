@@ -30,7 +30,7 @@ fn render_score<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32), sca
     render_text(&format!("{}", score), font_size as u32, (dx, dy), "666666", c, gfx, glyphs)
 }
 
-fn render_game_over<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
+fn render_game_over<C, G>(text: &str, score: i64, c: Context, gfx: &mut G, size: (u32, u32), scale: u32, glyphs: &mut C)
     where C: CharacterCache, G: Graphics<Texture=C::Texture>
 {
     let offset = 20;
@@ -40,7 +40,7 @@ fn render_game_over<C, G>(score: i64, c: Context, gfx: &mut G, size: (u32, u32),
     let dx = offset + ((size.0 * scale) as f64 / 2.) as i32 - 3 * font_size;
     let dy = offset + 3 * font_size;
 
-    render_text("Game Over!", font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
+    render_text(text, font_size as u32, (dx, dy), "ee33333", c, gfx, glyphs);
 
     let dx = dx + (5.8*font_size as f64) as i32 - font_size - offset - (score as f64 + 0.9).log10().ceil() as i32 * font_size;
     let dy = dy + font_size;
@@ -102,7 +102,10 @@ impl Renderable for Game {
 
             // render Game Over
             if self.game_over {
-                render_game_over(self.score, c, gfx, size, scale, glyphs);
+                render_game_over("Game Over!", self.score, c, gfx, size, scale, glyphs);
+            }
+            if self.game_won {
+                render_game_over("You Win!", self.score, c, gfx, size, scale, glyphs);
             }
         }
     }
