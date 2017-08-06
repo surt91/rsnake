@@ -31,7 +31,6 @@ impl Game {
         for p in snake.get_tail().iter() {
             map.occupy(*p);
         }
-        map.generate_food();
 
         Game {
             snake,
