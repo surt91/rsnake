@@ -96,6 +96,7 @@ impl Game {
         match self.autopilot {
             Autopilot::Stupid => self.stupid_autopilot(),
             Autopilot::Smart => self.smart_autopilot(),
+            Autopilot::Boring => self.boring_autopilot(),
             _ => (),
         }
 
@@ -134,6 +135,7 @@ impl Game {
             Q => Command::ChangeSpeed(1./0.8),
             F => Command::Autopilot(Autopilot::Stupid),
             T => Command::Autopilot(Autopilot::Smart),
+            G => Command::Autopilot(Autopilot::Boring),
             M => Command::Autopilot(Autopilot::None),
             H | P => Command::Help,
             R => Command::Restart,

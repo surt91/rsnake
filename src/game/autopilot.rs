@@ -50,6 +50,39 @@ impl Game {
         }
     }
 
+    fn find_food_top_right(&mut self) {
+        // take shortest way to food (manhattan metric)
+        let original = self.snake.direction;
+
+        let dx = self.map.get_food().x - self.snake.head().x;
+        let dy = self.map.get_food().y - self.snake.head().y;
+
+        if dy != 0 {
+            if self.snake.direction != Direction::N && self.snake.direction != Direction::S {
+                self.snake.turn(Direction::N);
+            }
+        } else if dx != 0 {
+            if self.snake.direction != Direction::W && self.snake.direction != Direction::E {
+                self.snake.turn(Direction::E);
+            }
+        }
+
+        // ensure that we do not walk into a wall
+        if self.detect_hazard() {
+            self.snake.turn(original)
+        }
+    }
+
+    fn go_top(&mut self) {
+        let original = self.snake.direction;
+
+        self.snake.turn(Direction::N);
+
+        if self.detect_hazard() {
+            self.snake.turn(original)
+        }
+    }
+
     fn detect_hazard(&self) -> bool {
         match self.map.at(&self.snake.peek()) {
             State::Empty | State::Food => false,
@@ -73,6 +106,21 @@ impl Game {
             if self.detect_hazard() {
                 self.snake.turn_right();
                 self.snake.turn_right();
+            }
+        }
+
+        decision
+    }
+
+    fn avoid_hazard_top_right(&mut self) -> bool {
+        let mut decision = false;
+        if self.detect_hazard() {
+            decision = true;
+            // decide to not collide in the next step
+            if self.snake.direction == Direction::E {
+                self.snake.turn(Direction::N);
+            } else {
+                self.snake.turn(Direction::E);
             }
         }
 
@@ -130,6 +178,16 @@ impl Game {
     pub fn smart_autopilot(&mut self) {
         if !self.avoid_trapping() {
             self.find_food();
+        }
+    }
+
+    pub fn boring_autopilot(&mut self) {
+        if !self.avoid_hazard_top_right() {
+            if self.snake.length as u32 > self.map.size.1 {
+                self.go_top();
+            } else {
+                self.find_food_top_right()
+            }
         }
     }
 }
