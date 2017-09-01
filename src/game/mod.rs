@@ -52,6 +52,7 @@ impl Game {
                 "WASD: Steer",
                 "F: Stupid Autopilot",
                 "T: Smart Autopilot",
+                "G: Boring Autopilot",
                 "M: Manual Control",
                 "P: Pause and Help",
                 "Esc: Exit"
