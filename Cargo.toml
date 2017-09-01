@@ -6,8 +6,8 @@ authors = ["Hendrik Schawe <surt91@gmail.com>"]
 [dependencies]
 rand = "*"
 clap = "*"
-piston = "*"
+piston = "0.32.0"
 pistoncore-glutin_window = "*"
-pistoncore-sdl2_window = "*"
-piston2d-graphics = "*"
-piston2d-opengl_graphics = "*"
+pistoncore-sdl2_window = "0.43.0"
+piston2d-graphics = "0.21.1"
+piston2d-opengl_graphics = "0.46.0"
