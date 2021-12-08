@@ -1,12 +1,10 @@
 extern crate piston;
 extern crate graphics;
 extern crate glutin_window;
-extern crate sdl2_window;
 extern crate opengl_graphics;
 extern crate rand;
 
-use sdl2_window::Sdl2Window as Window;
-// use glutin_window::GlutinWindow as Window;
+use glutin_window::GlutinWindow as Window;
 use piston::window::WindowSettings;
 
 use opengl_graphics::{GlGraphics, OpenGL, TextureSettings, Filter};
@@ -25,6 +23,7 @@ fn main() {
 
     let mut window: Window = WindowSettings::new("RSnake", [o.size.0 * o.scale, o.size.1 * o.scale])
                                             .exit_on_esc(true)
+                                            .decorated(false)
                                             .build()
                                             .unwrap();
 
