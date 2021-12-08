@@ -24,6 +24,7 @@ fn main() {
     let mut window: Window = WindowSettings::new("RSnake", [o.size.0 * o.scale, o.size.1 * o.scale])
                                             .exit_on_esc(true)
                                             .decorated(false)
+                                            .srgb(false)
                                             .build()
                                             .unwrap();
 
